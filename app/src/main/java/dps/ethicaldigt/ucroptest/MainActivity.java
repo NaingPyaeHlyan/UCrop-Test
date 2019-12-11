@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(pictureIntent, CAMERA_ACTION_PICK_REQUEST_CODE);
     }
 
-    String currentPhotoPath = "";
+    private String currentPhotoPath = "";
     private File getImageFile() throws IOException {
         String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";
         File storageDir = new File(
@@ -112,62 +112,27 @@ public class MainActivity extends AppCompatActivity {
 
         desUri = Uri.fromFile(new File(getCacheDir(), SAMPLE_CROPED_IMAGE_NAME + ".jpg"));
 
-        // This is for camera
+        // for Camera
         if (requestCode == CAMERA_ACTION_PICK_REQUEST_CODE && resultCode == RESULT_OK){
             Uri uri = Uri.parse(currentPhotoPath);
-//            File tempFile = new File(getExternalCacheDir(), SAMPLE_CROPED_IMAGE_NAME + "1.jpg");
-//            Uri desUri1;
-//            desUri1 = Uri.fromFile(tempFile);
             startCrop(uri, uri);
-
-//
-//            startCrop(uri, uri);
-
-//
-//            Bundle extra = data.getExtras();
-//            Bitmap bitmap = null;
-//            //   bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageResultCrop);
-//
-//            assert extra != null;
-//            bitmap = (Bitmap)extra.get("data");
-//            Glide.with(this)
-//                    .load(bitmap)
-//                    .circleCrop()
-//                    .into(imageView);
-
-            //      startCrop(imageUri, desUri);
         }
-
-
-//
-//        if(resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP){
-//            final Uri resultUri = UCrop.getOutput(data);
-//            Glide.with(this)
-//                    .load(resultUri)
-//                    .circleCrop()
-//                    .into(imageView);
-//
-//        }else if (resultCode == UCrop.RESULT_ERROR){
-//            final Throwable cropError = UCrop.getError(data);
-//            Toast.makeText(this, cropError.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//
 
         if (requestCode == UCrop.RESULT_ERROR){
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // for Gallery
         if(requestCode == CODE_IMAGE_GALLERY && resultCode == RESULT_OK){
-            // DESDE GALLERY
             Uri imgUri = data.getData();
             startCrop(imgUri, desUri);
         }
 
 
+        // for uCrop
         if (requestCode == UCrop.REQUEST_CROP){
             Uri imageResultCrop = UCrop.getOutput(data);
-     //       Toast.makeText(this, imageResultCrop.getPath(), Toast.LENGTH_SHORT).show();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageResultCrop);
                 Glide.with(this)
@@ -181,27 +146,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startCrop(@NonNull Uri sourceUri, Uri destinationUri){
-
-      //  File tempFile = new File(getCacheDir(), SAMPLE_CROPED_IMAGE_NAME + ".jpg");
-      //  Uri destinationUri = Uri.fromFile(tempFile);
-
         UCrop.of(sourceUri, destinationUri)
         .withAspectRatio(1,1)
         .withMaxResultSize(450, 450)
-        .withOptions(getOptioins()).start(this);
-
-//        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), SAMPLE_CROPED_IMAGE_NAME + ".jpg")));
-//        uCrop.withAspectRatio(1,1);
-//        uCrop.withMaxResultSize(450, 450);
-//        uCrop.withOptions(getOptioins());
-//        uCrop.start(this);
+        .withOptions(getOptioins())
+        .start(this);
     }
 
     private UCrop.Options getOptioins() {
         UCrop.Options options = new UCrop.Options();
         options.setCompressionQuality(70);
 
-        // CompressType
+//      // CompressType
 //        options.setCompressionFormat(Bitmap.CompressFormat.PNG);
 //        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
 
