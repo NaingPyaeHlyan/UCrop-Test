@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">UCrop Test</string>
+    <string-array name="imagePicker">
+        <item>From Gallery</item>
+        <item>From Camera</item>
+    </string-array>
+</resources>
